@@ -7,12 +7,14 @@
 #include <limits>
 #include <iostream>
 using namespace ariel;
-Team::Team(Character *captain) : _team{nullptr}, _teammates(0), _captain(captain) {
+Team::Team(Character *captain) : _teammates(0), _captain(captain) {
     if (captain == nullptr) {
         throw std::invalid_argument("NULL argument\n");
     }
 
+    std::fill(_team.begin(), _team.end(), nullptr);
     _team[_teammates++] = captain;
+    captain->setTeam();
 }
 
 void Team::add(Character *teammate) {
@@ -25,6 +27,7 @@ void Team::add(Character *teammate) {
     }
 
     _team[_teammates++] = teammate;
+    teammate->setTeam();
 }
 
 void Team::attack(Team *enemy_team) {

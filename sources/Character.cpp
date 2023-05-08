@@ -23,3 +23,5 @@ const Point &Character::getLocation() const {
 bool Character::isAlive() const {
     return _hit_points > 0;
 }
+
+void Character::setTeam() { in_team = true;}
