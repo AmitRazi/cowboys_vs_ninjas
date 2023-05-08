@@ -157,9 +157,9 @@ TEST_SUITE("Classes initialization tests and Team modification( add(),stillAlive
             }
         }
 
-       // auto over = create_cowboy();
-        //CHECK_THROWS(team1.add(over));
-        //CHECK_THROWS(team2.add(over));
+        auto over = create_cowboy();
+        CHECK_THROWS(team1.add(over));
+        CHECK_THROWS(team2.add(over));
     }
 
     TEST_CASE("Appointing the same leader to different teams") {
