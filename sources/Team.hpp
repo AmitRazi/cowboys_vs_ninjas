@@ -32,7 +32,7 @@ namespace ariel {
     public:
         explicit Team(Character *);
 
-        ~Team();
+        virtual ~Team();
 
         void add(Character *);
 

@@ -20,6 +20,14 @@ std::string Cowboy::print() const {
 }
 
 void Cowboy::shoot(Character *enemy)  {
+    if(hasboolets() == false){
+        throw std::runtime_error("Cowboy has not bullets");
+    }
+
+    if(isAlive() == false){
+        throw std::runtime_error("Cowboy is dead");
+    }
+
     if (enemy->isAlive() && this->hasboolets()) {
         enemy->hit(DAMAGE);
         _bullets--;
@@ -31,6 +39,9 @@ bool Cowboy::hasboolets() const {
 }
 
 void Cowboy::reload() {
+    if(isAlive() == false){
+        throw std::runtime_error("Cowboy is dead");
+    }
     _bullets = FULL_CLIP;
 }
 

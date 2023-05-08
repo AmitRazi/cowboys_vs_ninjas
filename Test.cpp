@@ -10,6 +10,7 @@
 #include <numeric>
 #include <random>
 #include <chrono>
+#include <iostream>
 
 using namespace ariel;
 
@@ -127,16 +128,16 @@ TEST_SUITE("Classes initialization tests and Team modification( add(),stillAlive
     }
 
     TEST_CASE("Team initialization") {
-        //Cowboy cowboy{"Bob", Point{2, 3}};
-        //YoungNinja ninja{"Bob", Point{2, 3}};
-        //Team team{&cowboy};
-        //CHECK_EQ(team.stillAlive(), 1);
+        auto cowboy = create_cowboy(2,3);
+        auto ninja = create_yninja (2,3);
+        Team team{cowboy};
+        CHECK_EQ(team.stillAlive(), 1);
 
-        //Team2 team2{&ninja};
-        //CHECK_EQ(team2.stillAlive(), 1);
+        Team2 team2{ninja};
+        CHECK_EQ(team2.stillAlive(), 1);
 
-        //CHECK_THROWS(Team{&ninja});
-        //CHECK_THROWS(Team2{&cowboy});
+         CHECK_THROWS(Team{ninja});
+         CHECK_THROWS(Team2{cowboy});
     }
 
     TEST_CASE("Team class add() and stillAlive() methods") {
@@ -147,14 +148,12 @@ TEST_SUITE("Classes initialization tests and Team modification( add(),stillAlive
         Team2 team2{captain2};
 
         for (int i = 0; i < MAX_TEAM - 1; i++) {
-            if (i % 2 == 0) {
                 auto cur1 = create_tninja();
                 auto cur2 = create_cowboy();
                 team1.add(cur1);
                 team2.add(cur2);
                 CHECK_EQ(team1.stillAlive(), i + 2);
                 CHECK_EQ(team2.stillAlive(), i + 2);
-            }
         }
 
         auto over = create_cowboy();
@@ -227,16 +226,16 @@ TEST_SUITE("Battle related methods") {
             auto young = create_yninja();
             auto cowboy = create_cowboy();
             for (int i = 0; i < 15; i++) {
-                CHECK(old->isAlive());
-                CHECK(trained->isAlive());
-                CHECK(young->isAlive());
                 cowboy->reload();
                 if (i < 10) {
+                    CHECK(young->isAlive());
                     cowboy->shoot(young);
                 }
                 if (i < 12) {
+                    CHECK(trained->isAlive());
                     cowboy->shoot(trained);
                 }
+                CHECK(old->isAlive());
                 cowboy->shoot(old);
             }
 
@@ -285,9 +284,11 @@ TEST_SUITE("Battle related methods") {
             YoungNinja young{"Karate kid", Point{0.5, 0.5}};
             Cowboy cowboy{"Clint", Point{0.5, 0.5}};
 
+            for(int i = 0 ; i < 3 ; i++){
             old.slash(&cowboy);
             young.slash(&cowboy);
             trained.slash(&cowboy);
+            }
 
             CHECK(cowboy.isAlive());
 
@@ -296,6 +297,7 @@ TEST_SUITE("Battle related methods") {
 
             YoungNinja ninja{"Bob", Point{-0.5, 0.5}};
             OldNinja ninja2{"Bob", Point{1, 1}};
+            std::cout<<young.print()<<std::endl;
             CHECK_THROWS_AS(young.slash(&ninja), std::runtime_error); // distance is exactly one
             CHECK_THROWS_AS(old.slash(&ninja2), std::runtime_error); // distance is more than one
         }
@@ -512,7 +514,6 @@ TEST_SUITE("Battle simulations") {
         auto t13 = create_tninja(random_float(3.0, 3.9), random_float(3.0, 3.9));
         auto t14 = create_cowboy();
         Team team{t11};
-        team.add(t11);
         team.add(t12);
         team.add(t13);
         team.add(t14);

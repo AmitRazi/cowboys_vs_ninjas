@@ -8,6 +8,7 @@ file(GLOB_RECURSE SOURCE_FILES
         Test.cpp
         TestCounter.cpp
         sources/*.cpp
+        sources/*.hpp
         )
 
 add_executable(cowboys_vs_ninjas ${SOURCE_FILES})

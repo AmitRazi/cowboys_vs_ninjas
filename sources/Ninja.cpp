@@ -2,6 +2,7 @@
 // Created by 97250 on 01/05/2023.
 //
 
+#include <iostream>
 #include "Ninja.hpp"
 
 using namespace ariel;
@@ -29,6 +30,8 @@ void Ninja::move(const Character *enemy) {
 void Ninja::slash(Character *enemy) const {
     if (this->_pos.distance(enemy->_pos) < 1) {
         enemy->hit(_speed);
+    } else{
+        throw std::runtime_error("Enemy is too far away");
     }
 }
 
