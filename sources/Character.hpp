@@ -9,19 +9,21 @@
 #include <string>
 #include "Point.hpp"
 #include <stdexcept>
+
 namespace ariel {
     class Character {
     protected:
+        Character(const std::string &name, const Point &pos, const int hit_points) : _name(name), _pos(pos),
+                                                                                     _hit_points(hit_points),
+                                                                                     in_team(false) {
+        }
+
+    public:
         const std::string _name;
         Point _pos;
         int _hit_points;
         bool in_team;
 
-        Character(const std::string &name, const Point &pos, const int hit_points) : _name(name), _pos(pos),
-                                                                                     _hit_points(hit_points) , in_team(false){
-        }
-
-    public:
         double distance(Character *other) const;
 
         virtual ~Character() = default;
