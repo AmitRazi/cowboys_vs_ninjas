@@ -51,8 +51,8 @@ void Team::attack(Team *enemy_team) {
     size_t i;
 
     for (i = 0; i < MAX_TEAMMATES*2; i++) {
-
-        if (i < 10 && _team[i] != nullptr && (typeid(*_team[(i)]) == typeid(Cowboy))) {
+        const auto &teammate = *_team[i];
+        if (i < 10 && _team[i] != nullptr && (typeid(teammate) == typeid(Cowboy))) {
             _team[i]->attack(closet);
         } else if (i >= 10 && _team[(i % 10)] != nullptr && (dynamic_cast<Ninja*>(_team[(i % 10)]) != nullptr)) {
             _team[i % 10]->attack(closet);
@@ -70,7 +70,7 @@ void Team::attack(Team *enemy_team) {
 void Team::print() const {
     for (size_t i = 0; i < MAX_TEAMMATES * 2; i++) {
         const auto &teammate = *_team[i];
-        if (i < 10 && _team[i] != nullptr && (typeid(*_team[i]) == typeid(Cowboy))) {
+        if (i < 10 && _team[i] != nullptr && (typeid(teammate) == typeid(Cowboy))) {
             std::cout<<_team[i]->print();
         } else if (i >= 10 && _team[i % 10] != nullptr && (dynamic_cast<Ninja*>(_team[(i % 10)]) != nullptr)) {
             std::cout<<_team[i % 10]->print();

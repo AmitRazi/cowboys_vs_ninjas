@@ -21,7 +21,7 @@ namespace ariel {
     protected:
         std::array<Character *, MAX_TEAMMATES> _team;
         Character *_captain;
-        int _teammates;
+        size_t _teammates;
 
         void appoint_leader();
 
