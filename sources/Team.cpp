@@ -48,7 +48,7 @@ void Team::attack(Team *enemy_team) {
         throw std::runtime_error("All the enemy team is dead");
     }
 
-    int i;
+    size_t i;
 
     for (i = 0; i < MAX_TEAMMATES*2; i++) {
 
@@ -68,7 +68,7 @@ void Team::attack(Team *enemy_team) {
 }
 
 void Team::print() const {
-    for (int i = 0; i < MAX_TEAMMATES * 2; i++) {
+    for (size_t i = 0; i < MAX_TEAMMATES * 2; i++) {
         const auto &teammate = *_team[i];
         if (i < 10 && _team[i] != nullptr && (typeid(*_team[i]) == typeid(Cowboy))) {
             std::cout<<_team[i]->print();
@@ -88,7 +88,7 @@ Character *Team::closest_mate(Team *to_search, const Character *dest_char) {
     Character *new_captain = nullptr;
     Character *cur_chr = nullptr;
 
-    for (int i = 0; i < MAX_TEAMMATES; i++) {
+    for (size_t i = 0; i < MAX_TEAMMATES; i++) {
         cur_chr = to_search->_team[i];
         if (cur_chr == nullptr) continue;
 

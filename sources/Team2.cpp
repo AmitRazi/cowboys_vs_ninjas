@@ -25,7 +25,7 @@ void Team2::attack(Team *enemy_team) {
         throw std::runtime_error("All the enemy team is dead");
     }
 
-    int i;
+    size_t i;
 
     for (i = 0; i < MAX_TEAMMATES; i++) {
         if (_team[i] != nullptr) {
@@ -42,7 +42,7 @@ void Team2::attack(Team *enemy_team) {
 }
 
 void Team2::print() const{
-    for (int i = 0; i < MAX_TEAMMATES; i++) {
+    for (size_t i = 0; i < MAX_TEAMMATES; i++) {
         if(_team[i] != nullptr){
             _team[i]->print();
         }
