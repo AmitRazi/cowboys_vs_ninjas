@@ -22,7 +22,7 @@ namespace ariel {
 
         double distance(Character *other) const;
 
-        virtual ~Character();
+        virtual ~Character() = default;
         void hit(int);
 
         const std::string &getName() const;
