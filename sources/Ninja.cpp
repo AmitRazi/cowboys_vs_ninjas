@@ -41,7 +41,7 @@ void Ninja::slash(Character *enemy) const {
     }
 
     if (this->_pos.distance(enemy->_pos) < 1) {
-        enemy->hit(_speed);
+        enemy->hit(DAMAGE);
     } else{
         throw std::runtime_error("Enemy is too far away");
     }

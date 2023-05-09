@@ -72,7 +72,7 @@ void Team::attack(Team *enemy_team) {
 
         if (i < 10 && (typeid(teammate) == typeid(Cowboy))) {
             _team[i]->attack(closet);
-        } else if (i >= 10) {
+        } else if (i >= 10 && typeid(teammate) != typeid(Cowboy)) {
             _team[i % 10]->attack(closet);
         }
     }
@@ -122,7 +122,7 @@ int Team::stillAlive() const{
     int count = 0;
     for(const Character* chr: _team){
         if(chr != nullptr && chr->isAlive()){
-            count++;
+            count+=1;
         }
     }
     return count;

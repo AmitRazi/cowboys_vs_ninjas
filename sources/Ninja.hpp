@@ -17,6 +17,7 @@ namespace ariel {
                                                                                       _speed(speed) {}
 
     public:
+        static const int DAMAGE = 13;
         std::string print() const override;
 
         void move(const Character *);
