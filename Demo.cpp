@@ -65,10 +65,31 @@ auto simulate_battle = [](Team &team, Team &team2) {
 
 int main() {
 
-    YoungNinja young{"Bob", Point{-0.5, 0.5}};
-    OldNinja ninja{"Bob", Point{0.5, 0.5}};
-    std::cout<<young.print()<<std::endl;
-    young.slash(&ninja);
-        return 0;
+    OldNinja old{"Bob", Point{0, 0}};
+    YoungNinja young{"Bob", Point{0, 0}};
+    Cowboy cowboy{"Bob", Point{0, 0}};
+    TrainedNinja trained("Bob",Point{0,0});
+    OldNinja old2{"Bob", Point{0, 0}};
+    YoungNinja young2{"Bob", Point{0, 0}};
+    Cowboy cowboy2{"Bob", Point{0, 0}};
+    TrainedNinja trained2("Bob",Point{0,0});
+
+    while(old2.isAlive()){
+        young.slash(&old2);
+    }
+
+    while(young2.isAlive()){
+        young.slash(&young2);
+    }
+
+    while(trained2.isAlive()){
+        young.slash(&trained2);
+    }
+
+    while(cowboy2.isAlive()){
+        young.slash(&cowboy2);
+    }
+
+    cowboy.shoot(&old2);
 
 }

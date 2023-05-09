@@ -42,8 +42,6 @@ void Team::attack(Team *enemy_team) {
         throw std::invalid_argument("NULL argument\n");
     }
 
-    if(stillAlive() == 0) return;
-
     if (!_captain->isAlive()) {
         appoint_leader();
     }
@@ -61,18 +59,18 @@ void Team::attack(Team *enemy_team) {
     size_t i;
 
     for (i = 0; i < MAX_TEAMMATES*2; i++) {
+        if (!closet->isAlive()) {
+            closet = closest_mate(enemy_team, _captain);
+        }
+
+        if (closet == nullptr) return;
+
         const auto &teammate = *_team[i];
         if (i < 10 && _team[i] != nullptr && (typeid(teammate) == typeid(Cowboy))) {
             _team[i]->attack(closet);
         } else if (i >= 10 && _team[(i % 10)] != nullptr && (dynamic_cast<Ninja*>(_team[(i % 10)]) != nullptr)) {
             _team[i % 10]->attack(closet);
         }
-
-        if (!closet->isAlive()) {
-            closet = closest_mate(enemy_team, _captain);
-        }
-
-        if (closet == nullptr) return;
     }
 
 }

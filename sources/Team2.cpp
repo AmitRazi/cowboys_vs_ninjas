@@ -28,15 +28,15 @@ void Team2::attack(Team *enemy_team) {
     size_t i;
 
     for (i = 0; i < MAX_TEAMMATES; i++) {
-        if (_team[i] != nullptr) {
-            _team[i]->attack(closet);
-        }
-
         if (!closet->isAlive()) {
             closet = closest_mate(enemy_team, _captain);
         }
 
         if (closet == nullptr) return;
+
+        if (_team[i] != nullptr && _team[i]->isAlive()) {
+            _team[i]->attack(closet);
+        }
     }
 
 }

@@ -28,6 +28,18 @@ void Ninja::move(const Character *enemy) {
 }
 
 void Ninja::slash(Character *enemy) const {
+    if(isAlive() == false){
+        throw std::runtime_error("Ninja is already dead");
+    }
+
+    if(enemy->isAlive() == false){
+        throw std::runtime_error("The enemy is already dead");
+    }
+
+    if(enemy == this){
+        throw std::runtime_error("A character can't attack itself");
+    }
+
     if (this->_pos.distance(enemy->_pos) < 1) {
         enemy->hit(_speed);
     } else{
@@ -36,8 +48,6 @@ void Ninja::slash(Character *enemy) const {
 }
 
 void Ninja::attack(Character *enemy) {
-    if (isAlive() == false) return;
-
     double distance = this->distance(enemy);
 
     if (distance < 1) {

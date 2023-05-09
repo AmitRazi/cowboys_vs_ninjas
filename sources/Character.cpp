@@ -5,6 +5,9 @@ double Character::distance(Character *other) const {
 }
 
 void Character::hit(int damage) {
+    if(damage < 0){
+        throw std::invalid_argument("Can not hit with a negative damage");
+    }
     if (damage >= _hit_points) {
         _hit_points = 0;
     } else {

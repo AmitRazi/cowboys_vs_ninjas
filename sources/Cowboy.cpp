@@ -6,6 +6,7 @@
 #include "Cowboy.hpp"
 
 using namespace ariel;
+
 std::string Cowboy::print() const {
     std::string printed_name, hit_points;
     if (!isAlive()) {
@@ -13,44 +14,55 @@ std::string Cowboy::print() const {
         hit_points = "";
     } else {
         printed_name = _name;
-        hit_points = "Hit points: "+std::to_string(_hit_points);
+        hit_points = "Hit points: " + std::to_string(_hit_points);
     }
 
-    return "Name: C. " + printed_name + ", " + hit_points + ", Position: "+_pos.print();
+    return "Name: C. " + printed_name + ", " + hit_points + ", Position: " + _pos.print();
 }
 
-void Cowboy::shoot(Character *enemy)  {
-    if(hasboolets() == false){
-        throw std::runtime_error("Cowboy has not bullets");
+void Cowboy::shoot(Character *enemy) {
+    if (hasboolets() == false) {
+        throw std::runtime_error("The cowboy has no bullets");
     }
 
-    if(isAlive() == false){
+    if (isAlive() == false) {
         throw std::runtime_error("Cowboy is dead");
     }
 
-    if (enemy->isAlive() && this->hasboolets()) {
-        enemy->hit(DAMAGE);
-        _bullets--;
+    if (enemy->isAlive() == false) {
+        throw std::runtime_error("The enemy is already dead");
     }
+
+    if(enemy == this){
+        throw std::runtime_error("A character can attack itself");
+    }
+
+    enemy->hit(DAMAGE);
+    _bullets--;
+
 }
 
 bool Cowboy::hasboolets() const {
+    if(isAlive() == false){
+        throw std::runtime_error("The cowboy is already dead");
+    }
+
     return _bullets > 0;
 }
 
 void Cowboy::reload() {
-    if(isAlive() == false){
+    if (isAlive() == false) {
         throw std::runtime_error("Cowboy is dead");
     }
     _bullets = FULL_CLIP;
 }
 
 void Cowboy::attack(Character *enemy) {
-    if(isAlive()){
-        if(hasboolets()) {
-            shoot(enemy);
-        } else{
-            reload();
-        }
+
+    if (hasboolets()) {
+        shoot(enemy);
+    } else {
+        reload();
     }
+
 }
