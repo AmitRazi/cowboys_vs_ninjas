@@ -43,10 +43,6 @@ void Cowboy::shoot(Character *enemy) {
 }
 
 bool Cowboy::hasboolets() const {
-    if(isAlive() == false){
-        throw std::runtime_error("The cowboy is already dead");
-    }
-
     return _bullets > 0;
 }
 
@@ -58,7 +54,7 @@ void Cowboy::reload() {
 }
 
 void Cowboy::attack(Character *enemy) {
-
+    if(isAlive() == false) return;
     if (hasboolets()) {
         shoot(enemy);
     } else {

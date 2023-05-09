@@ -65,14 +65,17 @@ void Team::attack(Team *enemy_team) {
 
         if (closet == nullptr) return;
 
-        const auto &teammate = *_team[i];
-        if (i < 10 && _team[i] != nullptr && (typeid(teammate) == typeid(Cowboy))) {
+        const auto &teammate = *_team[i % 10];
+        if(_team[i % 10] == nullptr || teammate.isAlive() == false){
+            continue;
+        }
+
+        if (i < 10 && (typeid(teammate) == typeid(Cowboy))) {
             _team[i]->attack(closet);
-        } else if (i >= 10 && _team[(i % 10)] != nullptr && (dynamic_cast<Ninja*>(_team[(i % 10)]) != nullptr)) {
+        } else if (i >= 10) {
             _team[i % 10]->attack(closet);
         }
     }
-
 }
 
 void Team::print() const {
