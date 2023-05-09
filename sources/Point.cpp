@@ -11,10 +11,12 @@ std::string Point::print() const {
     return  "(" + std::to_string(_x) + "," + std::to_string(_y) + ")\n";
 }
 
+
 Point Point::moveTowards(const Point &src, const Point &dest, const double distance) {
     if(distance < 0 ){
         throw std::runtime_error("Distance can not be negative\n");
     }
+
     double distance_to = src.distance(dest);
     if (distance_to <= distance) {
         return Point{dest};

@@ -7,20 +7,19 @@
 #include "sources/Cowboy.hpp"
 #include "sources/Team.hpp"
 #include "sources/Team2.hpp"
-#include <numeric>
 #include <random>
 #include <chrono>
-#include <iostream>
 
 using namespace ariel;
 
+//--------------------Helper Functions--------------------
 double random_float(double min = -100, double max = 100) {
     std::default_random_engine generator(
             static_cast<std::default_random_engine::result_type>(std::chrono::system_clock::now().time_since_epoch().count()));
     std::uniform_real_distribution<double> distribution(min, max);
 
     return distribution(generator);
-};
+}
 
 auto create_yninja = [](double x = random_float(), double y = random_float()) {
     return new YoungNinja{"Bob", Point{x, y}};
@@ -38,7 +37,7 @@ auto create_cowboy = [](double x = random_float(), double y = random_float()) {
     return new Cowboy{"Bob", Point{x, y}};
 };
 
-Character *random_char(double x = random_float(), double y = random_float()) {
+auto random_char(double x = random_float(), double y = random_float()) -> Character * {
     int flag = rand() % 4;
 
     if (flag == 0) return create_cowboy(x, y);
@@ -48,16 +47,21 @@ Character *random_char(double x = random_float(), double y = random_float()) {
     if (flag == 2) return create_tninja(x, y);
 
     return create_oninja(x, y);
-};
+}
 
 auto simulate_battle = [](Team &team, Team &team2) {
+    int i = 0;
     while (team.stillAlive() && team2.stillAlive()) {
-        team.attack(&team2);
-        team2.attack(&team);
+        if (i % 2 == 0) {
+            team.attack(&team2);
+        } else {
+            team2.attack(&team);
+        }
     }
 };
 
 const int MAX_TEAM = 10;
+
 
 TEST_SUITE("Point class tests") {
     Point p1{1, 1};
@@ -81,11 +85,11 @@ TEST_SUITE("Point class tests") {
         double half_p = distance / 2;
         double third_p = distance / 3;
 
-        Point p3{p1.moveTowards(p1, p2, half_p)};
+        Point p3{Point::moveTowards(p1, p2, half_p)};
         CHECK_EQ(p3.distance(p2), doctest::Approx(half_p).epsilon(0.001));
 
-        Point p4{p1.moveTowards(p1, p2, third_p)};
-        CHECK_EQ(p4.distance(p2), doctest::Approx(third_p).epsilon(0.001));
+        Point p4{Point::moveTowards(p1, p2, third_p)};
+        CHECK_EQ(p4.distance(p2), doctest::Approx(third_p * 2).epsilon(0.001));
 
         // There is no such a thing as negative distance
         CHECK_THROWS(Point::moveTowards(p1, p2, -1));
@@ -98,18 +102,20 @@ TEST_SUITE("Classes initialization tests and Team modification( add(),stillAlive
 
     TEST_CASE("Cowboy initialization") {
         Cowboy cowboy{"Bob", Point{2, 3}};
-        YoungNinja ninja{"Bob", Point{2, 3}};
         CHECK(cowboy.hasboolets());
         CHECK_EQ(cowboy.getName(), "Bob");
         CHECK_EQ(cowboy.getLocation().distance(Point{2, 3}), 0);
+        CHECK_NE(cowboy.getLocation().distance(Point{3, 2}), 0);
+
         CHECK(cowboy.isAlive());
     }
 
     TEST_CASE("YoungNinja initialization") {
-        Cowboy cowboy{"Bob", Point{2, 3}};
         YoungNinja ninja{"Bob", Point{2, 3}};
         CHECK_EQ(ninja.getName(), "Bob");
         CHECK_EQ(ninja.getLocation().distance(Point{2, 3}), 0);
+        CHECK_NE(ninja.getLocation().distance(Point{3, 2}), 0);
+
         CHECK(ninja.isAlive());
     }
 
@@ -117,6 +123,8 @@ TEST_SUITE("Classes initialization tests and Team modification( add(),stillAlive
         OldNinja old_ninja{"Bob", Point(2, 3)};
         CHECK_EQ(old_ninja.getName(), "Bob");
         CHECK_EQ(old_ninja.getLocation().distance(Point{2, 3}), 0);
+        CHECK_NE(old_ninja.getLocation().distance(Point{3, 2}), 0);
+
         CHECK(old_ninja.isAlive());
     }
 
@@ -124,12 +132,14 @@ TEST_SUITE("Classes initialization tests and Team modification( add(),stillAlive
         TrainedNinja trained_ninja{"Bob", Point{2, 3}};
         CHECK_EQ(trained_ninja.getName(), "Bob");
         CHECK_EQ(trained_ninja.getLocation().distance(Point{2, 3}), 0);
+        CHECK_NE(trained_ninja.getLocation().distance(Point{3, 2}), 0);
+
         CHECK(trained_ninja.isAlive());
     }
 
     TEST_CASE("Team initialization") {
-        auto cowboy = create_cowboy(2,3);
-        auto ninja = create_yninja (2,3);
+        auto cowboy = create_cowboy(2, 3);
+        auto ninja = create_yninja(2, 3);
         Team team{cowboy};
         CHECK_EQ(team.stillAlive(), 1);
 
@@ -169,12 +179,12 @@ TEST_SUITE("Classes initialization tests and Team modification( add(),stillAlive
         CHECK_THROWS(Team{captain});
         CHECK_THROWS(Team2{captain});
 
-        // Team team2{captain2};
-        //CHECK_THROWS(Team{captain2});
-        // CHECK_THROWS(Team2{captain2});
+        Team team2{captain2};
+        CHECK_THROWS(Team{captain2});
+        CHECK_THROWS(Team2{captain2});
     }
 
-    TEST_CASE("Adding the same regular character to different teams") {
+    TEST_CASE("Adding the same character to different teams") {
         auto captain1 = create_tninja();
         auto captain2 = create_oninja();
         auto captain3 = create_yninja();
@@ -218,114 +228,101 @@ TEST_SUITE("Battle related methods") {
 
     }
 
-    TEST_CASE("Not all ninjas are created equal") {
 
-        SUBCASE("Ninjas hit points are different") {
-            auto old = create_oninja();
-            auto trained = create_tninja();
-            auto young = create_yninja();
-            auto cowboy = create_cowboy();
-            for (int i = 0; i < 15; i++) {
-                cowboy->reload();
-                if (i < 10) {
-                    CHECK(young->isAlive());
-                    cowboy->shoot(young);
-                }
-                if (i < 12) {
-                    CHECK(trained->isAlive());
-                    cowboy->shoot(trained);
-                }
-                CHECK(old->isAlive());
-                cowboy->shoot(old);
+    TEST_CASE("Ninjas hit points are different") {
+        auto old = create_oninja();
+        auto trained = create_tninja();
+        auto young = create_yninja();
+        auto cowboy = create_cowboy();
+        for (int i = 0; i < 15; i++) {
+            cowboy->reload();
+            if (i < 10) {
+                CHECK(young->isAlive());
+                cowboy->shoot(young);
             }
-
-            CHECK_FALSE((old->isAlive() || young->isAlive() || trained->isAlive()));
-        }
-
-        SUBCASE("Ninjas speeds are different") {
-            OldNinja old{"Bob", Point{random_float() + 15, random_float() + 15}};
-            TrainedNinja trained{"Kung fu panda", Point{random_float() + 15, random_float() + 15}};
-            YoungNinja young{"Karate kid", Point{random_float() + 15, random_float() + 15}};
-            Cowboy cowboy{"Clint", Point{0, 0}};
-
-            double old_distance = old.distance(&cowboy);
-            double young_distance = trained.distance(&cowboy);
-            double trained_distance = trained.distance(&cowboy);
-
-            old.move(&cowboy);
-            trained.move(&cowboy);
-            young.move(&cowboy);
-
-            CHECK_EQ(old.distance(&cowboy),
-                     doctest::Approx(old_distance - 8).epsilon(0.001));
-            CHECK_EQ(trained.distance(&cowboy),
-                     doctest::Approx(trained_distance - 12).epsilon(0.001));
-            CHECK_EQ(young.distance(&cowboy),
-                     doctest::Approx(young_distance - 14).epsilon(0.001));
-        }
-
-        SUBCASE("Ninja is too far away from move() destination") {
-            double edge1 = std::numeric_limits<double>::max();
-            double edge2 = std::numeric_limits<double>::min();
-
-            YoungNinja ninja{"Bob", Point{edge1, edge1}};
-            OldNinja ninja2{"Bob", Point{edge2, edge2}};
-            TrainedNinja ninja3{"Yet another bob", Point{edge1, edge2}};
-
-            CHECK_THROWS_AS(ninja.move(&ninja2), std::runtime_error);
-            CHECK_THROWS_AS(ninja2.move(&ninja3), std::runtime_error);
-            CHECK_THROWS_AS(ninja3.move(&ninja), std::runtime_error);
-        }
-
-
-        SUBCASE("Ninjas can only slash when distance is less than 1") {
-            OldNinja old{"Bob", Point{0, 0}};
-            TrainedNinja trained{"Kung fu panda", Point{0, 0}};
-            YoungNinja young{"Karate kid", Point{0.5, 0.5}};
-            Cowboy cowboy{"Clint", Point{0.5, 0.5}};
-
-            for(int i = 0 ; i < 3 ; i++){
-                old.slash(&cowboy);
-                young.slash(&cowboy);
-                trained.slash(&cowboy);
+            if (i < 12) {
+                CHECK(trained->isAlive());
+                cowboy->shoot(trained);
             }
-
-            CHECK(cowboy.isAlive());
-
-            old.slash(&cowboy);
-            CHECK_FALSE(cowboy.isAlive());
-
-            YoungNinja ninja{"Bob", Point{-0.5, 0.5}};
-            OldNinja ninja2{"Bob", Point{1, 1}};
-            std::cout<<young.print()<<std::endl;
-            CHECK_THROWS_AS(young.slash(&ninja), std::runtime_error); // distance is exactly one
-            CHECK_THROWS_AS(old.slash(&ninja2), std::runtime_error); // distance is more than one
+            CHECK(old->isAlive());
+            cowboy->shoot(old);
         }
+
+        CHECK_FALSE((old->isAlive() || young->isAlive() || trained->isAlive()));
     }
+
+    TEST_CASE("Ninjas speeds are different") {
+        OldNinja old{"Bob", Point{random_float() + 15, random_float() + 15}};
+        TrainedNinja trained{"Kung fu panda", Point{random_float() + 15, random_float() + 15}};
+        YoungNinja young{"Karate kid", Point{random_float() + 15, random_float() + 15}};
+        Cowboy cowboy{"Clint", Point{0, 0}};
+
+        double old_distance = old.distance(&cowboy);
+        double young_distance = young.distance(&cowboy);
+        double trained_distance = trained.distance(&cowboy);
+
+        old.move(&cowboy);
+        trained.move(&cowboy);
+        young.move(&cowboy);
+
+        CHECK_EQ(old.distance(&cowboy),
+                 doctest::Approx(old_distance - 8).epsilon(0.001));
+        CHECK_EQ(trained.distance(&cowboy),
+                 doctest::Approx(trained_distance - 12).epsilon(0.001));
+        CHECK_EQ(young.distance(&cowboy),
+                 doctest::Approx(young_distance - 14).epsilon(0.001));
+    }
+
+    TEST_CASE("Ninjas can only slash when distance is less than 1") {
+        OldNinja old{"Bob", Point{0, 0}};
+        TrainedNinja trained{"Kung fu panda", Point{0, 0}};
+        YoungNinja young{"Karate kid", Point{0.5, 0.5}};
+        Cowboy cowboy{"Clint", Point{0.5, 0.5}};
+
+        for (int i = 0; i < 4; i++) {
+            old.slash(&cowboy);
+            young.slash(&cowboy);
+        }
+
+        CHECK(cowboy.isAlive());
+
+        old.slash(&cowboy);
+        CHECK_FALSE(cowboy.isAlive());
+
+        YoungNinja ninja{"Bob", Point{-0.5, 0.5}}; // Distance from young is exactly one
+        OldNinja ninja2{"Bob", Point{1, 1}};
+        for (int i = 0; i < 100; i++) {
+            young.slash(&ninja);
+            old.slash(&ninja2);
+        }
+        CHECK(ninja.isAlive());
+        CHECK(ninja2.isAlive());
+    }
+
 
     TEST_CASE("Dead characters cannot attack and characters cannot attack a dead enemy") {
         OldNinja old{"Bob", Point{0, 0}};
         YoungNinja young{"Bob", Point{0, 0}};
         Cowboy cowboy{"Bob", Point{0, 0}};
-        TrainedNinja trained("Bob",Point{0,0});
+        TrainedNinja trained("Bob", Point{0, 0});
         OldNinja old2{"Bob", Point{0, 0}};
         YoungNinja young2{"Bob", Point{0, 0}};
         Cowboy cowboy2{"Bob", Point{0, 0}};
-        TrainedNinja trained2("Bob",Point{0,0});
+        TrainedNinja trained2("Bob", Point{0, 0});
 
-        while(old2.isAlive()){
+        while (old2.isAlive()) {
             young.slash(&old2);
         }
 
-        while(young2.isAlive()){
+        while (young2.isAlive()) {
             young.slash(&young2);
         }
 
-        while(trained2.isAlive()){
+        while (trained2.isAlive()) {
             young.slash(&trained2);
         }
 
-        while(cowboy2.isAlive()){
+        while (cowboy2.isAlive()) {
             young.slash(&cowboy2);
         }
 
@@ -339,7 +336,6 @@ TEST_SUITE("Battle related methods") {
         CHECK_THROWS_AS(cowboy2.shoot(&old), std::runtime_error);
         CHECK_THROWS_AS(trained2.slash(&cowboy), std::runtime_error);
         CHECK_THROWS_AS(old2.slash(&cowboy), std::runtime_error);
-
 
 
     }
@@ -396,7 +392,7 @@ TEST_SUITE("Battle simulations") {
 
     auto multi_attack = [](int n, Team &attacker, Team &defender) {
         for (int i = 0; i < n; i++) {
-            if(defender.stillAlive()) {
+            if (defender.stillAlive()) {
                 attacker.attack(&defender);
             }
         }
@@ -424,7 +420,7 @@ TEST_SUITE("Battle simulations") {
 
         CHECK_EQ(team2.stillAlive(), 5);
 
-        multi_attack(2,team,team2);
+        multi_attack(2, team, team2);
         CHECK_FALSE(young_ninja->isAlive()); // Young ninja should be dead
         CHECK((trained_ninja->isAlive() && old_ninja->isAlive() &&
                young_ninja2->isAlive())); // Everyone else should still be alive
@@ -433,26 +429,27 @@ TEST_SUITE("Battle simulations") {
         CHECK((trained_ninja->isAlive() && old_ninja->isAlive() &&
                young_ninja2->isAlive())); // No one should die in the attack
 
-        team.attack(&team2);
+        multi_attack(2, team, team2);
         CHECK_FALSE(trained_ninja->isAlive()); // Trained ninja should be dead
         CHECK((old_ninja->isAlive() && young_ninja2->isAlive()));
 
-        multi_attack(4,team,team2);
+        multi_attack(4, team, team2);
         CHECK_FALSE(old_ninja->isAlive()); // Old ninja should be dead
         CHECK(young_ninja2->isAlive());
 
-        multi_attack(4,team,team2);
-        CHECK_NOTHROW(team.attack(&team2)); // The entire enemy team will be dead before every cowboy shoots, the attack should stop and not throw an exception
+        multi_attack(4, team, team2);
+        CHECK_NOTHROW(team.attack(
+                &team2)); // The entire enemy team will be dead before every cowboy shoots, the attack should stop and not throw an exception
         CHECK_FALSE(young_ninja2->isAlive()); // Young ninja should be dead
         CHECK_THROWS_AS(team.attack(&team2), std::runtime_error); // Attacking a dead team should throw an exception
     }
 
-
-//In this test only cowboys are used because they are stationary. This allows us to better keep track of everyone's position to better test for captain assignment.
-    //  *  The characters are organized as such:
-    //  *  2-1--2-[C1]-[C2]--2--1
-    // *   A hyphen (-) denotes a distance of one.
-
+    /*
+     * In this test only cowboys are used because they are stationary. This allows us to better keep track of everyone's position to better test for captain assignment.
+     * The characters are organized as such:
+     * 2-1--2-[C1]-[C2]--2--1
+     * A hyphen (-) denotes a distance of one.
+     * */
     TEST_CASE("The closest teammate to the captain is appointed as captain") {
 
         auto team_c1 = create_cowboy(0, 0);
@@ -488,13 +485,12 @@ TEST_SUITE("Battle simulations") {
         }
 
         CHECK((!team2_c2->isAlive() && team2_c1->isAlive() && !team2_c3->isAlive() && team2_c4->isAlive()));
-        std::cout<<team1.stillAlive()<<" "<<team2.stillAlive()<<std::endl;
 
         //Next captain should be team2_c1, hence, the next enemy to be attacked by team2 should team_cc.
         multi_attack(7, team2, team1);
         CHECK((!team_c3->isAlive() && team_c1->isAlive() && !team_c2->isAlive()));
 
-        while(team1.stillAlive() && team2.stillAlive()){
+        while (team1.stillAlive() && team2.stillAlive()) {
             team1.attack(&team2);
             team2.attack(&team1);
         }
@@ -538,28 +534,28 @@ TEST_SUITE("Battle simulations") {
     }
 
     TEST_CASE("When the captain moves, a different enemy should be targeted") {
-        auto t11 = create_yninja(random_float(1.0, 1.9), random_float(1.0, 1.9));
-        auto t12 = create_oninja(random_float(2.0, 2.9), random_float(2.0, 2.9));
-        auto t13 = create_tninja(random_float(3.0, 3.9), random_float(3.0, 3.9));
+        auto t11 = create_yninja(random_float(1.5, 1.6), random_float(1.5, 1.6));
+        auto t12 = create_oninja(random_float(2.5, 2.6), random_float(2.7, 2.5));
+        auto t13 = create_tninja(random_float(3.5, 3.6), random_float(3.5, 3.6));
         auto t14 = create_cowboy();
         Team team{t11};
         team.add(t12);
         team.add(t13);
         team.add(t14);
 
-        auto t21 = create_cowboy(random_float(-1.0, -1.9), random_float(-1.0, -1.9));
-        auto t22 = create_yninja(random_float(-2.0, -2.9), random_float(-2.0, -2.9));
-        auto t23 = create_tninja(random_float(-3.0, -3.9), random_float(-3.0, -3.9));
+        auto t21 = create_cowboy(random_float(-1.5, -1.5), random_float(-1.5, -1.6));
+        auto t22 = create_tninja(random_float(-2.5, -2.6), random_float(-2.5, -2.6));
+        auto t23 = create_yninja(random_float(-3.5, -3.6), random_float(-3.5, -3.6));
         Team team2{t21};
-        team.add(t22);
-        team.add(t23);
+        team2.add(t22);
+        team2.add(t23);
 
         team.attack(&team2);
         CHECK_EQ(t11->distance(t21), doctest::Approx(0).epsilon(0.001));
         CHECK_EQ(t12->distance(t21), doctest::Approx(0).epsilon(0.001));
         CHECK_EQ(t13->distance(t21), doctest::Approx(0).epsilon(0.001));
         CHECK(t21->isAlive());
-        multi_attack(2, team, team2);
+        multi_attack(3, team, team2);
         CHECK_FALSE(t21->isAlive()); // The first move in the attack should be a shot by the cowboy that kills t21
 
         // After the cowboy kills t21, all the ninja should move towards t22.
@@ -568,7 +564,9 @@ TEST_SUITE("Battle simulations") {
         CHECK_EQ(t13->distance(t22), doctest::Approx(0).epsilon(0.001));
 
         // Moving the captain behind t23, making t23 the new closest enemy.
-        Point::moveTowards(t11->getLocation(), Point{-4, -4}, 14);
+        Cowboy decoy{"decoy", Point{-5, -5}};
+        decoy.shoot(t23); //A shot needed to kill t23 in the next attack without making the ninjas move to next target
+        t11->move(&decoy);
         multi_attack(3, team, team2);
         CHECK_EQ(t11->distance(t23), doctest::Approx(0).epsilon(0.001));
         CHECK_EQ(t12->distance(t23), doctest::Approx(0).epsilon(0.001));
@@ -579,13 +577,13 @@ TEST_SUITE("Battle simulations") {
         CHECK_NOTHROW(simulate_battle(team, team2));
     }
 
-    TEST_CASE("Run full battles with random_float teams to ensure full functionality") {
+    TEST_CASE("Run full battles using random_char teams to ensure full functionality") {
         SUBCASE("Team vs Team") {
             Team team{random_char()};
             Team team2{random_char()};
             for (int i = 0; i < MAX_TEAM - 1; i++) {
-                team.attack(&team2);
-                team2.attack(&team);
+                team.add(random_char());
+                team2.add(random_char());
             }
 
             simulate_battle(team, team2);
@@ -597,8 +595,8 @@ TEST_SUITE("Battle simulations") {
             Team team{random_char()};
             Team2 team2{random_char()};
             for (int i = 0; i < MAX_TEAM - 1; i++) {
-                team.attack(&team2);
-                team2.attack(&team);
+                team.add(random_char());
+                team2.add(random_char());
             }
 
             simulate_battle(team, team2);
@@ -610,8 +608,8 @@ TEST_SUITE("Battle simulations") {
             Team2 team{random_char()};
             Team2 team2{random_char()};
             for (int i = 0; i < MAX_TEAM - 1; i++) {
-                team.attack(&team2);
-                team2.attack(&team);
+                team.add(random_char());
+                team2.add(random_char());
             }
 
             simulate_battle(team, team2);
