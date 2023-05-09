@@ -22,7 +22,8 @@ std::string Cowboy::print() const {
 
 void Cowboy::shoot(Character *enemy) {
     if (hasboolets() == false) {
-        throw std::runtime_error("The cowboy has no bullets");
+        reload();
+        return;
     }
 
     if (isAlive() == false) {

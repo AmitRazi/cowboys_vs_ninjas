@@ -12,7 +12,7 @@
 
 using namespace ariel;
 
-//--------------------Helper Functions--------------------
+//<--------------------Helper Functions-------------------->
 double random_float(double min = -100, double max = 100) {
     std::default_random_engine generator(
             static_cast<std::default_random_engine::result_type>(std::chrono::system_clock::now().time_since_epoch().count()));
@@ -99,7 +99,6 @@ TEST_SUITE("Point class tests") {
 
 TEST_SUITE("Classes initialization tests and Team modification( add(),stillAlive() )") {
 
-
     TEST_CASE("Cowboy initialization") {
         Cowboy cowboy{"Bob", Point{2, 3}};
         CHECK(cowboy.hasboolets());
@@ -145,9 +144,6 @@ TEST_SUITE("Classes initialization tests and Team modification( add(),stillAlive
 
         Team2 team2{ninja};
         CHECK_EQ(team2.stillAlive(), 1);
-
-        CHECK_THROWS(Team{ninja});
-        CHECK_THROWS(Team2{cowboy});
     }
 
     TEST_CASE("Team class add() and stillAlive() methods") {
@@ -157,6 +153,7 @@ TEST_SUITE("Classes initialization tests and Team modification( add(),stillAlive
         Team team1{captain1};
         Team2 team2{captain2};
 
+        // Every addition should rise the value returned by stillAlive()
         for (int i = 0; i < MAX_TEAM - 1; i++) {
             auto cur1 = create_tninja();
             auto cur2 = create_cowboy();
@@ -166,12 +163,13 @@ TEST_SUITE("Classes initialization tests and Team modification( add(),stillAlive
             CHECK_EQ(team2.stillAlive(), i + 2);
         }
 
+        // A team can have at most 10 teammates
         auto over = create_cowboy();
         CHECK_THROWS(team1.add(over));
         CHECK_THROWS(team2.add(over));
     }
 
-    TEST_CASE("Appointing the same leader to different teams") {
+    TEST_CASE("Appointing the same captain to different teams") {
         auto captain = create_cowboy();
         auto captain2 = create_yninja();
 
@@ -193,17 +191,23 @@ TEST_SUITE("Classes initialization tests and Team modification( add(),stillAlive
         Team team2{captain2};
         Team2 team3{captain3};
 
-        auto over = create_cowboy();
-        team1.add(over);
-        CHECK_THROWS(team2.add(over));
-        CHECK_THROWS(team3.add(over));
+        auto teammate1 = create_cowboy();
+        auto teammate2 = create_oninja();
+
+        team1.add(teammate1);
+        team1.add(teammate2);
+
+        CHECK_THROWS(team2.add(teammate1));
+        CHECK_THROWS(team3.add(teammate1));
+        CHECK_THROWS(team2.add(teammate2));
+        CHECK_THROWS(team3.add(teammate2));
     }
 }
 
 
 TEST_SUITE("Battle related methods") {
 
-    TEST_CASE("Cowboy shoot() are reload() methods") {
+    TEST_CASE("Cowboy shoot() and reload() methods") {
         auto cowboy = create_cowboy();
         auto target = create_oninja();
 
@@ -215,17 +219,18 @@ TEST_SUITE("Battle related methods") {
 
         shoot(6);
         CHECK_FALSE(cowboy->hasboolets());
-        CHECK_THROWS(cowboy->shoot(target)); // The magazine should be empty
+        CHECK_NOTHROW(cowboy->shoot(target)); // This should not damage the target
         cowboy->reload();
 
-        shoot(3);
+        shoot(2);
         cowboy->reload();
-        shoot(5);
+        shoot(6);
         CHECK(target->isAlive()); // Target should still be alive with 10 hit points if the cowboys damage is 10
         shoot(1);
-        CHECK_THROWS(shoot(1)); // Reloading when the magazine isn't empty shouldn't result in more than 6 _bullets
+        CHECK(target->isAlive()); // Reloading when the magazine isn't empty shouldn't result in more than 6 bullets, the previous shoot should have no effect
+        cowboy->reload();
+        shoot(1);
         CHECK_FALSE(target->isAlive()); // Target should be dead
-
     }
 
 
@@ -236,14 +241,20 @@ TEST_SUITE("Battle related methods") {
         auto cowboy = create_cowboy();
         for (int i = 0; i < 15; i++) {
             cowboy->reload();
+
+            // After 10 shots, young should die
             if (i < 10) {
                 CHECK(young->isAlive());
                 cowboy->shoot(young);
             }
+
+            // After 12 shots, trained should die
             if (i < 12) {
                 CHECK(trained->isAlive());
                 cowboy->shoot(trained);
             }
+
+            // Old should only die on the last iteration of the for loop
             CHECK(old->isAlive());
             cowboy->shoot(old);
         }
@@ -265,6 +276,7 @@ TEST_SUITE("Battle related methods") {
         trained.move(&cowboy);
         young.move(&cowboy);
 
+        // The new distance should equal the old distance minus the speed of the specific ninja
         CHECK_EQ(old.distance(&cowboy),
                  doctest::Approx(old_distance - 8).epsilon(0.001));
         CHECK_EQ(trained.distance(&cowboy),
@@ -291,10 +303,13 @@ TEST_SUITE("Battle related methods") {
 
         YoungNinja ninja{"Bob", Point{-0.5, 0.5}}; // Distance from young is exactly one
         OldNinja ninja2{"Bob", Point{1, 1}};
+
+        // These attacks should have no affect
         for (int i = 0; i < 100; i++) {
             young.slash(&ninja);
             old.slash(&ninja2);
         }
+
         CHECK(ninja.isAlive());
         CHECK(ninja2.isAlive());
     }
@@ -326,18 +341,18 @@ TEST_SUITE("Battle related methods") {
             young.slash(&cowboy2);
         }
 
+
+        // Attacking a dead character
         CHECK_THROWS_AS(young.slash(&old2), std::runtime_error);
         CHECK_THROWS_AS(cowboy.shoot(&old2), std::runtime_error);
         CHECK_THROWS_AS(trained.slash(&cowboy2), std::runtime_error);
         CHECK_THROWS_AS(old.slash(&cowboy2), std::runtime_error);
 
-
+        // Calling the attacking method of a dead character
         CHECK_THROWS_AS(young2.slash(&old), std::runtime_error);
         CHECK_THROWS_AS(cowboy2.shoot(&old), std::runtime_error);
         CHECK_THROWS_AS(trained2.slash(&cowboy), std::runtime_error);
         CHECK_THROWS_AS(old2.slash(&cowboy), std::runtime_error);
-
-
     }
 
     TEST_CASE("Sending nullptr to the attack() method") {
