@@ -22,7 +22,6 @@ std::string Cowboy::print() const {
 
 void Cowboy::shoot(Character *enemy) {
     if (hasboolets() == false) {
-        reload();
         return;
     }
 
@@ -35,7 +34,7 @@ void Cowboy::shoot(Character *enemy) {
     }
 
     if(enemy == this){
-        throw std::runtime_error("A character can attack itself");
+        throw std::runtime_error("A character can not attack itself");
     }
 
     enemy->hit(DAMAGE);

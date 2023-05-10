@@ -15,7 +15,7 @@ using namespace ariel;
 //<--------------------Helper Functions-------------------->
 //https://www.geeksforgeeks.org/generate-a-random-float-number-in-cpp/
 double random_float(double min = -100, double max = 100) {
-    std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
+    std::default_random_engine generator(static_cast<unsigned long>(std::chrono::system_clock::now().time_since_epoch().count()));
     std::uniform_real_distribution<double> distribution(min, max);
 
     return distribution(generator);
@@ -38,7 +38,7 @@ auto create_cowboy = [](double x = random_float(), double y = random_float()) {
 };
 
 auto random_char(double x = random_float(), double y = random_float()) -> Character * {
-    int flag = rand() % 4;
+    int flag = static_cast<int>(random_float()) % 4;
 
     if (flag == 0) return create_cowboy(x, y);
 
@@ -59,6 +59,7 @@ auto simulate_battle = [](Team &team, Team &team2) {
         }
     }
 };
+//<-------------------------------------------------->
 
 const int MAX_TEAM = 10;
 
@@ -92,7 +93,7 @@ TEST_SUITE("Point class tests") {
         CHECK_EQ(p4.distance(p2), doctest::Approx(third_p * 2).epsilon(0.001));
 
         // There is no such a thing as negative distance
-        CHECK_THROWS(Point::moveTowards(p1, p2, -1));
+        CHECK_THROWS_AS(Point::moveTowards(p1, p2, -1),std::invalid_argument);
     }
 
 }
@@ -165,8 +166,8 @@ TEST_SUITE("Classes initialization tests and Team modification( add(),stillAlive
 
         // A team can have at most 10 teammates
         auto over = create_cowboy();
-        CHECK_THROWS(team1.add(over));
-        CHECK_THROWS(team2.add(over));
+        CHECK_THROWS_AS(team1.add(over),std::runtime_error);
+        CHECK_THROWS_AS(team2.add(over),std::runtime_error);
     }
 
     TEST_CASE("Appointing the same captain to different teams") {
@@ -174,12 +175,12 @@ TEST_SUITE("Classes initialization tests and Team modification( add(),stillAlive
         auto captain2 = create_yninja();
 
         Team team1{captain};
-        CHECK_THROWS(Team{captain});
-        CHECK_THROWS(Team2{captain});
+        CHECK_THROWS_AS(Team{captain},std::runtime_error);
+        CHECK_THROWS_AS(Team2{captain},std::runtime_error);
 
         Team team2{captain2};
-        CHECK_THROWS(Team{captain2});
-        CHECK_THROWS(Team2{captain2});
+        CHECK_THROWS_AS(Team{captain2},std::runtime_error);
+        CHECK_THROWS_AS(Team2{captain2},std::runtime_error);
     }
 
     TEST_CASE("Adding the same character to different teams") {
@@ -197,10 +198,10 @@ TEST_SUITE("Classes initialization tests and Team modification( add(),stillAlive
         team1.add(teammate1);
         team1.add(teammate2);
 
-        CHECK_THROWS(team2.add(teammate1));
-        CHECK_THROWS(team3.add(teammate1));
-        CHECK_THROWS(team2.add(teammate2));
-        CHECK_THROWS(team3.add(teammate2));
+        CHECK_THROWS_AS(team2.add(teammate1),std::runtime_error);
+        CHECK_THROWS_AS(team3.add(teammate1),std::runtime_error);
+        CHECK_THROWS_AS(team2.add(teammate2),std::runtime_error);
+        CHECK_THROWS_AS(team3.add(teammate2),std::runtime_error);
     }
 }
 
@@ -460,7 +461,7 @@ TEST_SUITE("Battle simulations") {
     }
 
     /*
-     * In this test only cowboys are used because they are stationary. This allows us to better keep track of everyone's position to better test for captain assignment.
+     * In this test only cowboys are used because they are stationary. This allows us to better keep track of everyone's position to better test for captains assignment.
      * The characters are organized as such:
      * 2-1--2-[C1]-[C2]--2--1
      * A hyphen (-) denotes a distance of one.
@@ -512,7 +513,7 @@ TEST_SUITE("Battle simulations") {
     }
 
 
-    // In this test the attacking team is again composed of cowboys, this is because cowboys are stationary, and we can predict the damage done in every attack.
+    // In this test the attacking team is again composed of cowboys, this is because cowboys are stationary, and we can better predict the damage done in every attack.
     TEST_CASE("If several enemies are equidistant from the captain, only a single enemy should still be targeted.") {
         auto cowboy = create_cowboy();
         Team team{cowboy};
@@ -548,6 +549,7 @@ TEST_SUITE("Battle simulations") {
 
     }
 
+    // Similar to the previous test, only this time the captain is mobile.
     TEST_CASE("When the captain moves, a different enemy should be targeted") {
         auto t11 = create_yninja(random_float(1.5, 1.6), random_float(1.5, 1.6));
         auto t12 = create_oninja(random_float(2.5, 2.6), random_float(2.7, 2.5));
@@ -592,7 +594,7 @@ TEST_SUITE("Battle simulations") {
         CHECK_NOTHROW(simulate_battle(team, team2));
     }
 
-    TEST_CASE("Run full battles using random_char teams to ensure full functionality") {
+    TEST_CASE("Run full battles using random_char to ensure full functionality") {
         SUBCASE("Team vs Team") {
             Team team{random_char()};
             Team team2{random_char()};

@@ -10,86 +10,43 @@
 #include <sstream>
 #include <stdexcept>
 #include <cassert>
-#include <random>
-#include <chrono>
-
-
 using namespace std;
 
 #include "sources/Team.hpp" //no need for other includes
 
 using namespace ariel;
 
-double random_float(double min = -100, double max = 100) {
-    std::default_random_engine generator(
-            static_cast<std::default_random_engine::result_type>(std::chrono::system_clock::now().time_since_epoch().count()));
-    std::uniform_real_distribution<double> distribution(min, max);
-
-    return distribution(generator);
-};
-
-auto create_yninja = [](double x = random_float(), double y = random_float()) {
-    return new YoungNinja{"Bob", Point{x, y}};
-};
-
-auto create_tninja = [](double x = random_float(), double y = random_float()) {
-    return new TrainedNinja{"Bob", Point{x, y}};
-};
-
-auto create_oninja = [](double x = random_float(), double y = random_float()) {
-    return new OldNinja{"Bob", Point{x, y}};
-};
-
-auto create_cowboy = [](double x = random_float(), double y = random_float()) {
-    return new Cowboy{"Bob", Point{x, y}};
-};
-
-Character *random_char(double x = random_float(), double y = random_float()) {
-    int flag = rand() % 4;
-
-    if (flag == 0) return create_cowboy(x, y);
-
-    if (flag == 1) return create_yninja(x, y);
-
-    if (flag == 2) return create_tninja(x, y);
-
-    return create_oninja(x, y);
-};
-
-auto simulate_battle = [](Team &team, Team &team2) {
-    while (team.stillAlive() > 0 && team2.stillAlive() > 0) {
-        team.attack(&team2);
-        team2.attack(&team);
-    }
-};
 
 int main() {
+    Point a(32.3,44),b(1.3,3.5);
+    assert(a.distance(b) == b.distance(a));
+    Cowboy *tom = new Cowboy("Tom", a);
+    OldNinja *sushi = new OldNinja("sushi", b);
+    tom->shoot(sushi);
+    cout << tom->print() <<endl;
 
-    OldNinja old{"Bob", Point{0, 0}};
-    YoungNinja young{"Bob", Point{0, 0}};
-    Cowboy cowboy{"Bob", Point{0, 0}};
-    TrainedNinja trained("Bob",Point{0,0});
-    OldNinja old2{"Bob", Point{0, 0}};
-    YoungNinja young2{"Bob", Point{0, 0}};
-    Cowboy cowboy2{"Bob", Point{0, 0}};
-    TrainedNinja trained2("Bob",Point{0,0});
+    sushi->move(tom);
+    sushi->slash(tom);
 
-    while(old2.isAlive()){
-        young.slash(&old2);
+    Team team_A(tom);
+    team_A.add(new YoungNinja("Yogi", Point(64,57)));
+
+    // Team b(tom); should throw tom is already in team a
+
+    Team team_B(sushi);
+    team_B.add(new TrainedNinja("Hikari", Point(12,81)));
+
+
+    while(team_A.stillAlive() > 0 && team_B.stillAlive() > 0){
+        team_A.attack(&team_B);
+        team_B.attack(&team_A);
+        team_A.print();
+        team_B.print();
     }
 
-    while(young2.isAlive()){
-        young.slash(&young2);
-    }
+    if (team_A.stillAlive() > 0) cout << "winner is team_A" << endl;
+    else cout << "winner is team_B" << endl;
 
-    while(trained2.isAlive()){
-        young.slash(&trained2);
-    }
-
-    while(cowboy2.isAlive()){
-        young.slash(&cowboy2);
-    }
-
-    cowboy.shoot(&old2);
+    return 0; // no memory issues. Team should free the memory of its members. both a and b teams are on the stack.
 
 }
