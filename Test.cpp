@@ -13,9 +13,9 @@
 using namespace ariel;
 
 //<--------------------Helper Functions-------------------->
+//https://www.geeksforgeeks.org/generate-a-random-float-number-in-cpp/
 double random_float(double min = -100, double max = 100) {
-    std::default_random_engine generator(
-            static_cast<std::default_random_engine::result_type>(std::chrono::system_clock::now().time_since_epoch().count()));
+    std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
     std::uniform_real_distribution<double> distribution(min, max);
 
     return distribution(generator);
