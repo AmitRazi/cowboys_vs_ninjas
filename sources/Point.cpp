@@ -14,7 +14,7 @@ std::string Point::print() const {
 
 Point Point::moveTowards(const Point &src, const Point &dest, const double distance) {
     if(distance < 0 ){
-        throw std::runtime_error("Distance can not be negative\n");
+        throw std::invalid_argument("Distance can not be negative\n");
     }
 
     double distance_to = src.distance(dest);

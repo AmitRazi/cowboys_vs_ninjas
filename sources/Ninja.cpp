@@ -47,7 +47,7 @@ void Ninja::slash(Character *enemy) const {
 void Ninja::attack(Character *enemy) {
     double distance = this->distance(enemy);
 
-    if (distance < 1) {
+    if (distance <= 1) {
         slash(enemy);
     } else {
         move(enemy);

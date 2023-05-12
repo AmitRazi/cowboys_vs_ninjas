@@ -304,14 +304,19 @@ TEST_SUITE("Battle related methods") {
         CHECK_FALSE(cowboy.isAlive());
 
         YoungNinja ninja{"Bob", Point{-0.5, 0.5}}; // Distance from young is exactly one
-        OldNinja ninja2{"Bob", Point{1, 1}};
+        OldNinja ninja2{"Bob", Point{2, 2}};
 
         // These attacks should have no affect
-        for (int i = 0; i < 100; i++) {
-            young.slash(&ninja);
+        for (int i = 0; i < 20; i++) {
+            trained.slash(&ninja2);
             old.slash(&ninja2);
+            young.slash(&ninja2);
         }
 
+        for(int i = 0 ; i < 5 ; i++){
+            old.slash(&ninja);
+            young.slash(&ninja);
+        }
         CHECK(ninja.isAlive());
         CHECK(ninja2.isAlive());
     }
