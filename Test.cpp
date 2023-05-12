@@ -57,6 +57,7 @@ auto simulate_battle = [](Team &team, Team &team2) {
         } else {
             team2.attack(&team);
         }
+        i++;
     }
 };
 //<-------------------------------------------------->
