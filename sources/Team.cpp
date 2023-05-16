@@ -13,7 +13,7 @@ Team::Team(Character *captain) :_team{nullptr}, _teammates(0), _captain(captain)
     }
 
     if(captain->in_team){
-        throw std::("Character is already in a different team\n");
+        throw std::runtime_error("Character is already in a different team\n");
     }
     std::fill(_team.begin(), _team.end(), nullptr);
     _team[_teammates++] = captain;

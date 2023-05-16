@@ -2,9 +2,11 @@
 // Created by 97250 on 01/05/2023.
 //
 
+#include <iostream>
 #include "Ninja.hpp"
 
 using namespace ariel;
+
 std::string Ninja::print() const {
     std::string printed_name, hit_points;
     if (!isAlive()) {
@@ -12,10 +14,10 @@ std::string Ninja::print() const {
         hit_points = "";
     } else {
         printed_name = _name;
-        hit_points = "Hit points: "+std::to_string(_hit_points);
+        hit_points = "Hit points: " + std::to_string(_hit_points);
     }
 
-    return "Name: N. " + printed_name + ", " + hit_points + ", Position: "+_pos.print();
+    return "Name: N. " + printed_name + ", " + hit_points + ", Position: " + _pos.print();
 }
 
 void Ninja::move(const Character *enemy) {
@@ -27,21 +29,23 @@ void Ninja::move(const Character *enemy) {
 }
 
 void Ninja::slash(Character *enemy) const {
-    if(isAlive() == false){
+    if (isAlive() == false) {
         throw std::runtime_error("Ninja is already dead");
     }
 
-    if(enemy->isAlive() == false){
+    if (enemy->isAlive() == false) {
         throw std::runtime_error("The enemy is already dead");
     }
 
-    if(enemy == this){
+    if (enemy == this) {
         throw std::runtime_error("A character can't attack itself");
     }
 
-    if (this->_pos.distance(enemy->_pos) < 1) {
+
+    if(distance(enemy) <= 1) {
         enemy->hit(DAMAGE);
     }
+
 }
 
 void Ninja::attack(Character *enemy) {

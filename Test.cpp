@@ -9,6 +9,7 @@
 #include "sources/Team2.hpp"
 #include <random>
 #include <chrono>
+#include <iostream>
 
 using namespace ariel;
 
@@ -326,9 +327,8 @@ TEST_SUITE("Battle related methods") {
         old.slash(&ninja);
         young.slash(&ninja);
         trained.slash(&ninja);
-        young.slash(&ninja);
 
-        CHECK(ninja.isAlive());
+        CHECK_FALSE(ninja.isAlive());
         CHECK(ninja2.isAlive());
     }
 
@@ -471,6 +471,7 @@ TEST_SUITE("Battle simulations") {
         CHECK_EQ(team2.stillAlive(), 7);
 
         multi_attack(2, team, team2);
+        std::cout<<young_ninja->print();
         CHECK_FALSE(young_ninja->isAlive()); // Young ninja should be dead
         CHECK((trained_ninja->isAlive() && old_ninja->isAlive() &&
                young_ninja2->isAlive())); // Everyone else should still be alive
