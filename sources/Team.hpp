@@ -25,9 +25,10 @@ namespace ariel {
 
         void appoint_leader();
 
-        static Character *closest_mate(Team *, const Character *);
+        static Character *closest_character(const Team *to_search, const Character *dest_char);
 
         Character *closest_enemy(Team *) const;
+
 
     public:
         explicit Team(Character *);
@@ -41,6 +42,8 @@ namespace ariel {
         virtual void print() const;
 
         int stillAlive() const;
+
+        Character* getTeamMember(size_t i) const;
     };
 }
 

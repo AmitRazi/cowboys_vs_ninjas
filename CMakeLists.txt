@@ -11,5 +11,5 @@ file(GLOB_RECURSE SOURCE_FILES
         sources/*.hpp
         )
 
-add_executable(cowboys_vs_ninjas ${SOURCE_FILES})
+add_executable(cowboys_vs_ninjas ${SOURCE_FILES} sources/SmartTeam.cpp sources/SmartTeam.hpp)
 

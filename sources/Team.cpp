@@ -13,7 +13,7 @@ Team::Team(Character *captain) :_team{nullptr}, _teammates(0), _captain(captain)
     }
 
     if(captain->in_team){
-        throw std::runtime_error("Character is already in a different team\n");
+        throw std::("Character is already in a different team\n");
     }
     std::fill(_team.begin(), _team.end(), nullptr);
     _team[_teammates++] = captain;
@@ -60,7 +60,7 @@ void Team::attack(Team *enemy_team) {
 
     for (i = 0; i < MAX_TEAMMATES*2; i++) {
         if (!closet->isAlive()) {
-            closet = closest_mate(enemy_team, _captain);
+            closet = closest_enemy(enemy_team);
         }
 
         if (closet == nullptr) return;
@@ -91,12 +91,12 @@ void Team::print() const {
 
 
 void Team::appoint_leader() {
-    _captain = closest_mate(this, _captain);
+    _captain = closest_character(this, _captain);
 }
 
-Character *Team::closest_mate(Team *to_search, const Character *dest_char) {
+Character *Team::closest_character(const Team *to_search, const Character *dest_char) {
     double min_distance = std::numeric_limits<double>::max();
-    Character *new_captain = nullptr;
+    Character *closest_chr = nullptr;
     Character *cur_chr = nullptr;
 
     for (size_t i = 0; i < MAX_TEAMMATES; i++) {
@@ -105,16 +105,16 @@ Character *Team::closest_mate(Team *to_search, const Character *dest_char) {
 
         double distance = dest_char->distance(cur_chr);
         if (distance < min_distance && cur_chr->isAlive()) {
-            new_captain = to_search->_team[i];
+            closest_chr = to_search->_team[i];
             min_distance = distance;
         }
     }
 
-    return new_captain;
+    return closest_chr;
 }
 
 Character *Team::closest_enemy(Team *enemy_team) const {
-    Character *to_attack = closest_mate(enemy_team, _captain);
+    Character *to_attack = closest_character(enemy_team, _captain);
     return to_attack;
 }
 
@@ -135,3 +135,5 @@ Team::~Team(){
         }
     }
 }
+
+Character* Team::getTeamMember(size_t i) const { return _team[i]; }

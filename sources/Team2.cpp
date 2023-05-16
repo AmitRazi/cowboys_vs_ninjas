@@ -19,7 +19,7 @@ void Team2::attack(Team *enemy_team) {
         throw std::runtime_error("All the team is already dead");
     }
 
-    Character *closet = closest_mate(enemy_team, _captain);
+    Character *closet = closest_enemy(enemy_team);
 
     if (closet == nullptr) {
         throw std::runtime_error("All the enemy team is dead");
@@ -29,7 +29,7 @@ void Team2::attack(Team *enemy_team) {
 
     for (i = 0; i < MAX_TEAMMATES; i++) {
         if (!closet->isAlive()) {
-            closet = closest_mate(enemy_team, _captain);
+            closet = closest_enemy(enemy_team);
         }
 
         if (closet == nullptr) return;
