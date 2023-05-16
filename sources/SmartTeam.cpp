@@ -43,7 +43,7 @@ void SmartTeam::attack(Team *enemy_team) {
 }
 
 Character* SmartTeam::find_weakest(Team *enemy) const{
-
+    return nullptr;
 }
 
 //first cowboys attack any ninja that is close to a teammate
