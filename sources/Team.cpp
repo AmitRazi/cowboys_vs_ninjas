@@ -81,10 +81,10 @@ void Team::attack(Team *enemy_team) {
 void Team::print() const {
     for (size_t i = 0; i < MAX_TEAMMATES * 2; i++) {
         if(_team[i % 10] == nullptr){
-            break;
+            continue;
         }
 
-        const auto &teammate = *_team[i % i];
+        const auto &teammate = *_team[i % 10];
         if (i < 10  && (typeid(teammate) == typeid(Cowboy))) {
             std::cout<<_team[i]->print();
         } else if (i >= 10 && typeid(teammate) != typeid(Cowboy)) {
@@ -147,3 +147,4 @@ Character* Team::getCaptain() const{
 int Team::getTeamSize() const{
     return _teammates;
 }
+

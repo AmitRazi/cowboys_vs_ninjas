@@ -1,4 +1,3 @@
-/*
 #include "doctest.h"
 
 #include "sources/Team.hpp"
@@ -490,14 +489,12 @@ TEST_SUITE("Battle simulations") {
         CHECK_THROWS_AS(team.attack(&team2), std::runtime_error); // Attacking a dead team should throw an exception
     }
 
-    */
-/*
+    /*
      * In this test only cowboys are used because they are stationary. This allows us to better keep track of everyone's position to better test for captains assignment.
      * The characters are organized as such:
      * 2-1--2-[C1]-[C2]--2--1
      * A hyphen (-) denotes a distance of one.
-     * *//*
-
+     * */
     TEST_CASE("The closest teammate to the captain is appointed as captain") {
 
         auto team_c1 = create_cowboy(0, 0);
@@ -666,4 +663,4 @@ TEST_SUITE("Battle simulations") {
             CHECK(((team.stillAlive() && !team2.stillAlive()) || (!team.stillAlive() && team2.stillAlive())));
         }
     }
-}*/
+}

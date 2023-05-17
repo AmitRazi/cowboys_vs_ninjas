@@ -28,3 +28,13 @@ bool Character::isAlive() const {
 }
 
 void Character::setTeam() { in_team = true;}
+
+Character &Character::operator=(Character &other){
+    if (this != &other) {
+        _name = other._name;
+        _pos = other._pos;
+        _hit_points = other._hit_points;
+        in_team = other.in_team;
+    }
+    return *this;
+}

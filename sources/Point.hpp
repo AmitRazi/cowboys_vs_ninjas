@@ -11,8 +11,6 @@ namespace ariel {
     public:
         explicit Point(const double x_cor = 0, const double y_cor = 0) : _x(x_cor), _y(y_cor) {}
 
-        Point(const Point &other) = default;
-
         double distance(const Point &other) const;
 
         std::string print() const;

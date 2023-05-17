@@ -33,6 +33,10 @@ namespace ariel {
     public:
         explicit Team(Character *captain);
 
+        Team(Team &team) = delete;
+
+        Team(Team &&team) = delete;
+
         virtual ~Team();
 
         void add(Character *character);
@@ -48,6 +52,9 @@ namespace ariel {
         Character* getCaptain() const;
 
         int getTeamSize() const;
+
+        Team &operator=(Team &team) = delete;
+        Team &operator=(Team &&team) = delete;
     };
 }
 

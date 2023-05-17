@@ -18,8 +18,12 @@ namespace ariel {
                                                                                      in_team(false) {
         }
 
+        Character(const Character &other) = delete;
+
+        Character(Character &&other) = delete;
+
     public:
-        const std::string _name;
+        std::string _name;
         Point _pos;
         int _hit_points;
         bool in_team;
@@ -41,6 +45,10 @@ namespace ariel {
         virtual std::string print() const = 0;
 
         virtual void attack(Character *enemy) = 0;
+
+        Character &operator=(Character &other) = delete;
+
+        Character &operator=(Character &&other) = delete;
     };
 }
 
