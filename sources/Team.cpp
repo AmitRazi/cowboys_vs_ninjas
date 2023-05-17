@@ -80,10 +80,14 @@ void Team::attack(Team *enemy_team) {
 
 void Team::print() const {
     for (size_t i = 0; i < MAX_TEAMMATES * 2; i++) {
-        const auto &teammate = *_team[i];
-        if (i < 10 && _team[i] != nullptr && (typeid(teammate) == typeid(Cowboy))) {
+        if(_team[i] == nullptr){
+            break;
+        }
+
+        const auto &teammate = *_team[i % i];
+        if (i < 10  && (typeid(teammate) == typeid(Cowboy))) {
             std::cout<<_team[i]->print();
-        } else if (i >= 10 && _team[i % 10] != nullptr && (dynamic_cast<Ninja*>(_team[(i % 10)]) != nullptr)) {
+        } else if (i >= 10 && typeid(teammate) != typeid(Cowboy)) {
             std::cout<<_team[i % 10]->print();
         }
     }
@@ -101,7 +105,7 @@ Character *Team::closest_character(const Team *to_search, const Character *dest_
 
     for (size_t i = 0; i < MAX_TEAMMATES; i++) {
         cur_chr = to_search->_team[i];
-        if (cur_chr == nullptr) continue;
+        if (cur_chr == nullptr) break;
 
         double distance = dest_char->distance(cur_chr);
         if (distance < min_distance && cur_chr->isAlive()) {
@@ -130,9 +134,7 @@ int Team::stillAlive() const{
 
 Team::~Team(){
     for(auto &character: _team){
-        if(character != nullptr){
             delete character;
-        }
     }
 }
 

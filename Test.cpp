@@ -1,10 +1,5 @@
 #include "doctest.h"
 
-#include "sources/Character.hpp"
-#include "sources/OldNinja.hpp"
-#include "sources/YoungNinja.hpp"
-#include "sources/TrainedNinja.hpp"
-#include "sources/Cowboy.hpp"
 #include "sources/Team.hpp"
 #include "sources/Team2.hpp"
 #include <random>
@@ -471,7 +466,6 @@ TEST_SUITE("Battle simulations") {
         CHECK_EQ(team2.stillAlive(), 7);
 
         multi_attack(2, team, team2);
-        std::cout<<young_ninja->print();
         CHECK_FALSE(young_ninja->isAlive()); // Young ninja should be dead
         CHECK((trained_ninja->isAlive() && old_ninja->isAlive() &&
                young_ninja2->isAlive())); // Everyone else should still be alive

@@ -8,8 +8,6 @@
 
 #include <array>
 #include <typeinfo>
-#include "Character.hpp"
-#include "Ninja.hpp"
 #include "OldNinja.hpp"
 #include "YoungNinja.hpp"
 #include "TrainedNinja.hpp"

@@ -32,7 +32,7 @@ void Team2::attack(Team *enemy_team) {
             closet = closest_enemy(enemy_team);
         }
 
-        if (closet == nullptr) return;
+        if (closet == nullptr) break;
 
         if (_team[i] != nullptr && _team[i]->isAlive()) {
             _team[i]->attack(closet);
