@@ -80,7 +80,7 @@ void Team::attack(Team *enemy_team) {
 
 void Team::print() const {
     for (size_t i = 0; i < MAX_TEAMMATES * 2; i++) {
-        if(_team[i] == nullptr){
+        if(_team[i % 10] == nullptr){
             break;
         }
 
