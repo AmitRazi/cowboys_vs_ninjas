@@ -13,11 +13,11 @@ namespace ariel {
 
         Point(const Point &other) = default;
 
-        double distance(const Point &) const;
+        double distance(const Point &other) const;
 
         std::string print() const;
 
-        static Point moveTowards(const Point &, const Point &, double);
+        static Point moveTowards(const Point &src, const Point &dst, double);
     };
 }
 #endif //SP_4_POINT_HPP

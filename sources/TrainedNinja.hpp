@@ -14,7 +14,7 @@ static const int INTIAL_HITPOINTS_TRAINED = 120;
     class TrainedNinja : public Ninja {
     public:
 
-        TrainedNinja(const std::string &name, const Point &pos) : Ninja(name, pos, SPEED_TRAINED,
+        TrainedNinja(const std::string &name, const Point &pos) : Ninja(name,SPEED_TRAINED,pos,
                                                                         INTIAL_HITPOINTS_TRAINED) {}
     };
 }

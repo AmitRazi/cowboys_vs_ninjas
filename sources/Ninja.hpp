@@ -13,7 +13,7 @@ namespace ariel {
         int _speed;
 
     protected:
-        Ninja(const std::string &name, const Point &pos, int speed, int hit_points) : Character(name, pos, hit_points),
+        Ninja(const std::string &name,const int speed ,const Point &pos,const int hit_points) : Character(name, pos, hit_points),
                                                                                       _speed(speed) {}
 
     public:
@@ -22,9 +22,9 @@ namespace ariel {
 
         void move(const Character *);
 
-        void slash(Character *) const;
+        void slash(Character *enemy) const;
 
-        void attack(Character *) override;
+        void attack(Character *enemy) override;
     };
 }
 

@@ -16,8 +16,8 @@ namespace ariel {
 
         void print() const override;
 
-        Character* find_weakest(Team*) const;
-        Character* find_close_ninja(Team*) const;
+        Character* find_weakest(Team* team) const;
+        Character* find_close_ninja(Team* team) const;
 
 
 

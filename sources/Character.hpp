@@ -40,7 +40,7 @@ namespace ariel {
 
         virtual std::string print() const = 0;
 
-        virtual void attack(Character *) = 0;
+        virtual void attack(Character *enemy) = 0;
     };
 }
 

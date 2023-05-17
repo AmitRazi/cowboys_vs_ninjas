@@ -25,23 +25,23 @@ namespace ariel {
 
         static Character *closest_character(const Team *to_search, const Character *dest_char);
 
-        Character *closest_enemy(Team *) const;
+        Character *closest_enemy(Team *team) const;
 
 
     public:
-        explicit Team(Character *);
+        explicit Team(Character *captain);
 
         virtual ~Team();
 
-        void add(Character *);
+        void add(Character *character);
 
-        virtual void attack(Team *);
+        virtual void attack(Team *enemy);
 
         virtual void print() const;
 
         int stillAlive() const;
 
-        Character* getTeamMember(size_t i) const;
+        Character* getTeamMember(size_t index) const;
     };
 }
 

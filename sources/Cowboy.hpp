@@ -25,7 +25,7 @@ namespace ariel {
 
         void reload();
 
-        void attack(Character *) override;
+        void attack(Character *enemy) override;
 
     };
 }
