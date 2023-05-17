@@ -139,3 +139,11 @@ Team::~Team(){
 }
 
 Character* Team::getTeamMember(size_t i) const { return _team[i]; }
+
+Character* Team::getCaptain() const{
+    return _captain;
+}
+
+int Team::getTeamSize() const{
+    return _teammates;
+}

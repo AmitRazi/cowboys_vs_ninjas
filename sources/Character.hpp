@@ -26,8 +26,6 @@ namespace ariel {
 
         double distance(Character *other) const;
 
-        virtual ~Character() = default;
-
         void hit(int);
 
         void setTeam();

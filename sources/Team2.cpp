@@ -11,11 +11,14 @@ void Team2::attack(Team *enemy_team) {
         throw std::invalid_argument("NULL argument\n");
     }
 
-    if (!_captain->isAlive()) {
+    Character* captain = getCaptain();
+
+    if (!captain->isAlive()) {
         appoint_leader();
+        captain = getCaptain();
     }
 
-    if (_captain == nullptr) {
+    if (captain == nullptr) {
         throw std::runtime_error("All the team is already dead");
     }
 
@@ -34,8 +37,10 @@ void Team2::attack(Team *enemy_team) {
 
         if (closet == nullptr) break;
 
-        if (_team[i] != nullptr && _team[i]->isAlive()) {
-            _team[i]->attack(closet);
+        Character* teammate = getTeamMember(i);
+
+        if (teammate != nullptr && teammate->isAlive()) {
+            teammate->attack(closet);
         }
     }
 
@@ -43,8 +48,10 @@ void Team2::attack(Team *enemy_team) {
 
 void Team2::print() const{
     for (size_t i = 0; i < MAX_TEAMMATES; i++) {
-        if(_team[i] != nullptr){
-            _team[i]->print();
+        Character* teammate = getTeamMember(i);
+
+        if(teammate != nullptr){
+            teammate->print();
         }
     }
 }

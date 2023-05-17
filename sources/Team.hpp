@@ -16,10 +16,12 @@ namespace ariel {
     static const int MAX_TEAMMATES = 10;
 
     class Team {
-    protected:
+    private:
         std::array<Character *, MAX_TEAMMATES> _team;
         Character *_captain;
         size_t _teammates;
+
+    protected:
 
         void appoint_leader();
 
@@ -42,6 +44,10 @@ namespace ariel {
         int stillAlive() const;
 
         Character* getTeamMember(size_t index) const;
+
+        Character* getCaptain() const;
+
+        int getTeamSize() const;
     };
 }
 

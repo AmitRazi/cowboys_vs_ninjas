@@ -12,7 +12,7 @@ namespace ariel {
     public:
         explicit SmartTeam(Character *captain) : Team(captain) {}
 
-        void attack(Team *) override;
+        void attack(Team *team) override;
 
         void print() const override;
 
