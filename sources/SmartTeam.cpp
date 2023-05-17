@@ -77,8 +77,11 @@ Character* SmartTeam::find_close_ninja(Team *enemy) const{
 
 void SmartTeam::print() const{
     for (size_t i = 0; i < MAX_TEAMMATES; i++) {
-        if(_team[i] != nullptr){
-            _team[i]->print();
+
+        Character* teammate = getTeamMember(i);
+
+        if(teammate != nullptr){
+            teammate->print();
         }
     }
 }
