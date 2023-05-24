@@ -36,6 +36,8 @@ namespace ariel {
 
         void setTeam();
 
+        void setLocation(const Point point);
+
         const std::string &getName() const;
 
         const Point &getLocation() const;

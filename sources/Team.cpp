@@ -106,7 +106,9 @@ Character *Team::closest_character(const Team *to_search, const Character *dest_
     for (size_t i = 0; i < MAX_TEAMMATES; i++) {
         cur_chr = to_search->_team[i];
         if (cur_chr == nullptr) break;
-
+        if(to_search->stillAlive() == 1 && cur_chr->isAlive()){
+            return cur_chr;
+        }
         double distance = dest_char->distance(cur_chr);
         if (distance < min_distance && cur_chr->isAlive()) {
             closest_chr = to_search->_team[i];
@@ -148,3 +150,6 @@ int Team::getTeamSize() const{
     return _teammates;
 }
 
+std::array<Character *, MAX_TEAMMATES> &Team::getTeam(){
+    return _team;
+}

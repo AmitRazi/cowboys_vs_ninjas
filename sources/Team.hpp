@@ -29,6 +29,8 @@ namespace ariel {
 
         Character *closest_enemy(Team *team) const;
 
+        std::array<Character *, MAX_TEAMMATES> &getTeam();
+
 
     public:
         explicit Team(Character *captain);

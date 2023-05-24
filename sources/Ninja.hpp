@@ -25,6 +25,8 @@ namespace ariel {
         void slash(Character *enemy) const;
 
         void attack(Character *enemy) override;
+
+        int getSpeed() const;
     };
 }
 

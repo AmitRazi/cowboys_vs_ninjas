@@ -15,7 +15,9 @@ namespace ariel {
 
         std::string print() const;
 
-        static Point moveTowards(const Point &src, const Point &dst, double);
+        static Point moveTowards(const Point &src, const Point &dst,double);
+
+        static Point moveAwayFrom(const Point &src, double);
     };
 }
 #endif //SP_4_POINT_HPP

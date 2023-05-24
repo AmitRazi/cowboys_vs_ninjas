@@ -23,18 +23,14 @@ const Point &Character::getLocation() const {
     return _pos;
 }
 
+void Character::setLocation(const Point point) {
+    _pos = point;
+}
+
 bool Character::isAlive() const {
     return _hit_points > 0;
 }
 
 void Character::setTeam() { in_team = true;}
 
-Character &Character::operator=(Character &other){
-    if (this != &other) {
-        _name = other._name;
-        _pos = other._pos;
-        _hit_points = other._hit_points;
-        in_team = other.in_team;
-    }
-    return *this;
-}
+

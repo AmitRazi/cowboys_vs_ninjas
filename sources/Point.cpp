@@ -4,6 +4,9 @@
 #include <cmath>
 using namespace ariel;
 double Point::distance(const Point &other) const {
+    if(this->_x == other._x && this->_y == other._y){
+        return 0;
+    }
     return sqrt(pow(_x - other._x, 2) + pow(_y - other._y, 2));
 }
 
@@ -29,4 +32,14 @@ Point Point::moveTowards(const Point &src, const Point &dest, const double dista
     double scaled_y = unit_y * distance;
 
     return Point{src._x + scaled_x, src._y + scaled_y};
+}
+
+Point Point::moveAwayFrom(const Point &src,const double distance){
+    if(distance < 0 ){
+        throw std::invalid_argument("Distance can not be negative\n");
+    }
+
+
+
+    return Point{src._x +distance, src._y};
 }

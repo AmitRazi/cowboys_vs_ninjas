@@ -18,6 +18,7 @@ namespace ariel {
 
         Character* find_weakest(Team* team) const;
         Character* find_close_ninja(Team* team) const;
+        int stillAliveCowboys() ;
 
 
 

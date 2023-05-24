@@ -57,3 +57,7 @@ void Ninja::attack(Character *enemy) {
         move(enemy);
     }
 }
+
+int Ninja::getSpeed() const{
+    return _speed;
+}

@@ -13,6 +13,7 @@
 using namespace std;
 
 #include "sources/Team.hpp" //no need for other includes
+#include "sources/SmartTeam.hpp"
 
 using namespace ariel;
 
@@ -22,24 +23,23 @@ int main() {
     assert(a.distance(b) == b.distance(a));
     Cowboy *tom = new Cowboy("Tom", a);
     OldNinja *sushi = new OldNinja("sushi", b);
-    tom->shoot(sushi);
-    cout << tom->print() <<endl;
 
-    sushi->move(tom);
-    sushi->slash(tom);
+    Cowboy *tom2 = new Cowboy("Tom", a);
+    OldNinja *sushi2 = new OldNinja("sushi", b);
+
 
     Team team_A(tom);
-    team_A.add(new YoungNinja("Yogi", Point(64,57)));
-
+    team_A.add(sushi);
+    team_A.print();
     // Team b(tom); should throw tom is already in team a
-
-    Team team_B(sushi);
-    team_B.add(new TrainedNinja("Hikari", Point(12,81)));
-
+    Team team_B(tom2);
+    team_B.add(sushi2);
 
     while(team_A.stillAlive() > 0 && team_B.stillAlive() > 0){
         team_A.attack(&team_B);
-        team_B.attack(&team_A);
+        if(team_B.stillAlive() >0) {
+            team_B.attack(&team_A);
+        }
         team_A.print();
         team_B.print();
     }
