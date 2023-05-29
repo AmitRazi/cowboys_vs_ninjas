@@ -2,11 +2,12 @@
 #define SP_4_COWBOY_HPP
 
 #include "Character.hpp"
-namespace ariel {
-    static const int FULL_CLIP = 6;
-    static const int INITAIL_HITPOINTS = 110;
 
-    static const int DAMAGE = 10;
+namespace ariel {
+    const int FULL_CLIP = 6;
+    const int INITAIL_HITPOINTS = 110;
+
+    const int DAMAGE = 10;
 
     class Cowboy : public Character {
     public:

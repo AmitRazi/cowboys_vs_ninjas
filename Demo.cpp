@@ -62,7 +62,7 @@ int main() {
     int i;
     int win1 = 0;
     int win2 = 0;
-    for(int i = 0 ; i < 1000 ; i++) {
+    for(int i = 0 ; i < 10000 ; i++) {
         auto captain1 = random_char();
         auto captain2 = random_char();
 
@@ -92,7 +92,7 @@ int main() {
     win1 = 0;
     win2 = 0;
 
-    for(int i = 0 ; i < 1000 ; i++) {
+    for(int i = 0 ; i < 10000 ; i++) {
         auto captain1 = random_char();
         auto captain2 = random_char();
 
@@ -122,7 +122,7 @@ int main() {
     win1 = 0;
     win2 = 0;
 
-    for(int i = 0 ; i < 1000 ; i++) {
+    for(int i = 0 ; i < 10000 ; i++) {
         auto captain1 = random_char();
         auto captain2 = random_char();
 
@@ -152,7 +152,7 @@ int main() {
     win1 = 0;
     win2 = 0;
 
-    for(int i = 0 ; i < 1000 ; i++) {
+    for(int i = 0 ; i < 10000 ; i++) {
         auto captain1 = random_char();
         auto captain2 = random_char();
 
@@ -182,7 +182,7 @@ int main() {
     win1 = 0;
     win2 = 0;
 
-    for(int i = 0 ; i < 1000 ; i++) {
+    for(int i = 0 ; i < 10000 ; i++) {
         auto captain1 = random_char();
         auto captain2 = random_char();
 
@@ -212,7 +212,7 @@ int main() {
     win1 = 0;
     win2 = 0;
 
-    for(int i = 0 ; i < 1000 ; i++) {
+    for(int i = 0 ; i < 10000 ; i++) {
         auto captain1 = random_char();
         auto captain2 = random_char();
 
@@ -242,7 +242,7 @@ int main() {
     win1 = 0;
     win2 = 0;
 
-    for(int i = 0 ; i < 1000 ; i++) {
+    for(int i = 0 ; i < 10000 ; i++) {
         auto captain1 = random_char();
         auto captain2 = random_char();
 
@@ -272,7 +272,7 @@ int main() {
     win1 = 0;
     win2 = 0;
 
-    for(int i = 0 ; i < 1000 ; i++) {
+    for(int i = 0 ; i < 10000 ; i++) {
         auto captain1 = random_char();
         auto captain2 = random_char();
 
