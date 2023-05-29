@@ -8,10 +8,10 @@ void Character::hit(int damage) {
     if(damage < 0){
         throw std::invalid_argument("Can not hit with a negative damage");
     }
-    if (damage >= _hit_points) {
-        _hit_points = 0;
+    if (damage >= _hitPoints) {
+        _hitPoints = 0;
     } else {
-        _hit_points -= damage;
+        _hitPoints -= damage;
     }
 }
 
@@ -28,9 +28,17 @@ void Character::setLocation(const Point point) {
 }
 
 bool Character::isAlive() const {
-    return _hit_points > 0;
+    return _hitPoints > 0;
 }
 
-void Character::setTeam() { in_team = true;}
+void Character::setTeam() { _inTeam = true;}
+
+int Character::getHitPoints() const{
+    return _hitPoints;
+}
+
+bool Character::isInTeam() const {
+    return _inTeam;
+}
 
 

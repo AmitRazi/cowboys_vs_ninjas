@@ -12,7 +12,7 @@ Team::Team(Character *captain) :_team{nullptr}, _teammates(0), _captain(captain)
         throw std::invalid_argument("NULL argument\n");
     }
 
-    if(captain->in_team){
+    if(captain->isInTeam()){
         throw std::runtime_error("Character is already in a different team\n");
     }
     std::fill(_team.begin(), _team.end(), nullptr);
@@ -29,7 +29,7 @@ void Team::add(Character *teammate) {
         throw std::runtime_error("The team is already full\n");
     }
 
-    if(teammate->in_team){
+    if(teammate->isInTeam()){
         throw std::runtime_error("Character is already in a team\n");
     }
 
@@ -66,6 +66,7 @@ void Team::attack(Team *enemy_team) {
         if (closet == nullptr) return;
 
         const auto &teammate = *_team[i % 10];
+
         if(_team[i % 10] == nullptr || teammate.isAlive() == false){
             continue;
         }

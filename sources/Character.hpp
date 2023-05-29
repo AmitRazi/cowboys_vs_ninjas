@@ -12,10 +12,16 @@
 
 namespace ariel {
     class Character {
+    private:
+        std::string _name;
+        Point _pos;
+        int _hitPoints;
+        bool _inTeam;
+
     protected:
         Character(const std::string &name, const Point &pos, const int hit_points) : _name(name), _pos(pos),
-                                                                                     _hit_points(hit_points),
-                                                                                     in_team(false) {
+                                                                                     _hitPoints(hit_points),
+                                                                                     _inTeam(false) {
         }
 
         Character(const Character &other) = delete;
@@ -23,10 +29,7 @@ namespace ariel {
         Character(Character &&other) = delete;
 
     public:
-        std::string _name;
-        Point _pos;
-        int _hit_points;
-        bool in_team;
+
 
         double distance(Character *other) const;
 
@@ -42,7 +45,11 @@ namespace ariel {
 
         const Point &getLocation() const;
 
+        int getHitPoints() const;
+
         bool isAlive() const;
+
+        bool isInTeam() const;
 
         virtual std::string print() const = 0;
 

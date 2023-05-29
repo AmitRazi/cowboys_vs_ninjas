@@ -14,7 +14,7 @@ namespace ariel {
 
         Cowboy(const std::string &name, const Point &point) : Character(name, point, INITAIL_HITPOINTS),
                                                               _bullets(FULL_CLIP) {
-            this->_pos.print();
+            this->getLocation().print();
         }
 
         std::string print() const override;

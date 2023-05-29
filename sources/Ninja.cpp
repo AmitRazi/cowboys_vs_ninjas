@@ -13,17 +13,17 @@ std::string Ninja::print() const {
         printed_name = "(" + getName() + ")";
         hit_points = "";
     } else {
-        printed_name = _name;
-        hit_points = "Hit points: " + std::to_string(_hit_points);
+        printed_name = getName();
+        hit_points = "Hit points: " + std::to_string(getHitPoints());
     }
 
-    return "Name: N. " + printed_name + ", " + hit_points + ", Position: " + _pos.print();
+    return "Name: N. " + printed_name + ", " + hit_points + ", Position: " + getLocation().print();
 }
 
 void Ninja::move(const Character *enemy) {
     if (isAlive()) {
-        Point closest_point = Point::moveTowards(this->_pos, enemy->_pos, this->_speed);
-        this->_pos = closest_point;
+        Point closest_point = Point::moveTowards(this->getLocation(), enemy->getLocation(), this->_speed);
+        this->setLocation(closest_point);
     }
 
 }

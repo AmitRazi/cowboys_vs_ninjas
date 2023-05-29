@@ -76,7 +76,7 @@ Character *SmartTeam::find_weakest(Team *enemy) const {
             break;
         }
 
-        if (weakest == nullptr || weakest->_hit_points > cur->_hit_points) {
+        if (weakest == nullptr || weakest->getHitPoints() > cur->getHitPoints()) {
             weakest = cur;
         }
     }
@@ -95,7 +95,7 @@ Character *SmartTeam::find_close_ninja(Team *enemy) const {
         if (cur != nullptr && typeid(*cur) != typeid(Cowboy)) {
             Character *temp = enemy->closest_character(this, cur);
             if (temp->distance(cur) <= 42) {
-                if (closest == nullptr || (closest_to->_hit_points > temp->_hit_points)) {
+                if (closest == nullptr || (closest_to->getHitPoints() > temp->getHitPoints())) {
                     closest = cur;
                     closest_to = temp;
                 }

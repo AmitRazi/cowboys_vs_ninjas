@@ -13,11 +13,11 @@ std::string Cowboy::print() const {
         printed_name = "(" + getName() + ")";
         hit_points = "";
     } else {
-        printed_name = _name;
-        hit_points = "Hit points: " + std::to_string(_hit_points);
+        printed_name = getName();
+        hit_points = "Hit points: " + std::to_string(getHitPoints());
     }
 
-    return "Name: C. " + printed_name + ", " + hit_points + ", Position: " + _pos.print();
+    return "Name: C. " + printed_name + ", " + hit_points + ", Position: " + getLocation().print();
 }
 
 void Cowboy::shoot(Character *enemy) {
@@ -54,11 +54,9 @@ void Cowboy::reload() {
 }
 
 void Cowboy::attack(Character *enemy) {
-    if(isAlive() == false) return;
     if (hasboolets()) {
         shoot(enemy);
     } else {
         reload();
     }
-
 }
