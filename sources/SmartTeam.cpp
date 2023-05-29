@@ -15,7 +15,6 @@ void SmartTeam::attack(Team *enemy_team) {
     if (!captain->isAlive()) {
         appoint_leader();
         captain = getCaptain();
-        printf("appoting %d\n", stillAlive());
     }
 
     if (captain == nullptr) {
@@ -39,29 +38,23 @@ void SmartTeam::attack(Team *enemy_team) {
 
         if (i < 10 && typeid(*teammate) == typeid(Cowboy)) {
             while (closest_ninja != nullptr && !closest_ninja->isAlive()) {
-                find_close_ninja(enemy_team);
+                closest_ninja = find_close_ninja(enemy_team);
             }
-            if (closest_ninja != nullptr) {
+            if (closest_ninja != nullptr && closest_ninja->isAlive()) { // check if the closest_ninja is still alive
                 teammate->attack(closest_ninja);
                 continue;
             }
             weakest = weakest->isAlive() ? weakest : find_weakest(enemy_team);
-            if(weakest == nullptr){
+            if(weakest == nullptr || !weakest->isAlive()){ // check if the weakest is still alive
                 break;
             }
             teammate->attack(weakest);
         } else if (i >= 10 && typeid(*teammate) != typeid(Cowboy)) {
             closest_to = closest_character(enemy_team, teammate);
-            if (closest_to == nullptr) {
+            if (closest_to == nullptr || !closest_to->isAlive()) { // check if the closest_to is still alive
                 break;
             }
-            if (teammate->distance(closest_to) <= 1 && stillAliveCowboys() > 0) {
-                Ninja* ninja = dynamic_cast<Ninja*>(teammate);
-                Point newPosition = Point::moveAwayFrom(ninja->getLocation(),ninja->getSpeed());
-                teammate->setLocation(newPosition);
-            } else {
-                teammate->attack(closest_to);
-            }
+            teammate->attack(closest_to);
         }
     }
 
@@ -76,7 +69,7 @@ Character *SmartTeam::find_weakest(Team *enemy) const {
             break;
         }
 
-        if (weakest == nullptr || weakest->getHitPoints() > cur->getHitPoints()) {
+        if ((weakest == nullptr || weakest->getHitPoints() > cur->getHitPoints()) && cur->isAlive()) {
             weakest = cur;
         }
     }
@@ -92,8 +85,8 @@ Character *SmartTeam::find_close_ninja(Team *enemy) const {
 
     for (size_t i = 0; i < MAX_TEAMMATES; i++) {
         cur = enemy->getTeamMember(i);
-        if (cur != nullptr && typeid(*cur) != typeid(Cowboy)) {
-            Character *temp = enemy->closest_character(this, cur);
+        if (cur != nullptr && typeid(*cur) != typeid(Cowboy) && cur->isAlive()) {
+            Character *temp = closest_character(this, cur);
             if (temp->distance(cur) <= 42) {
                 if (closest == nullptr || (closest_to->getHitPoints() > temp->getHitPoints())) {
                     closest = cur;
@@ -123,7 +116,7 @@ int SmartTeam::stillAliveCowboys(){
         if(chr == nullptr){
             break;
         }
-        if(typeid(*chr) == typeid(Cowboy)){
+        if(typeid(*chr) == typeid(Cowboy) && chr->isAlive()){
             cowboysCount++;
         }
     }
